@@ -1,7 +1,17 @@
 from typing import Dict, List
 
+from flask import Flask, request
+import json
 
-def getNextProbableWords(classes: List[Dict],
+app = Flask(__name__)
+
+@app.route('/', methods=['POST'])
+def lazy_developer():
+    data = request.get_json()
+    classes = data['classes']
+    statements = data['statements']
+    
+    def getNextProbableWords(classes: List[Dict],
                          statements: List[str]) -> Dict[str, List[str]]:
   class_dict = {list(c.keys())[0]: list(c.values())[0] for c in classes}
   result = {}
@@ -24,3 +34,12 @@ def getNextProbableWords(classes: List[Dict],
       ][:5])
 
   return result
+    # For example:
+    result = process(classes, statements)  # Assuming 'process' is a function in your script
+    
+    return json.dumps(result), 200
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
